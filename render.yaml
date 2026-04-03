@@ -1,0 +1,42 @@
+# Render.com Deployment Config
+# Deploys both the Node.js server and the React client as separate services.
+#
+# HOW TO DEPLOY:
+# 1. Push this repo to GitHub
+# 2. Go to https://render.com → New → Blueprint → select your repo
+# 3. Render will auto-read this file and create both services
+
+services:
+  # ── Backend (Node.js / Express) ──────────────────────────────────────────────
+  - type: web
+    name: arg-academy-server
+    env: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        value: mongodb+srv://arg:arg-20@cluster0.7mc2uwl.mongodb.net/?appName=Cluster0
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: admin@ARG2025
+
+  # ── Frontend (React / Vite) ───────────────────────────────────────────────────
+  - type: web
+    name: arg-academy-client
+    env: static
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://argtest.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html    # Required for React Router SPA

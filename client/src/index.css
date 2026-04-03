@@ -1,0 +1,66 @@
+/* ── Google Fonts — must be FIRST before any other CSS ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Merriweather:wght@400;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+/* ── Scroll Animation Classes ── */
+.scroll-hidden {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.scroll-hidden.scroll-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-hidden-left {
+  opacity: 0;
+  transform: translateX(-48px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.scroll-hidden-left.scroll-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-hidden-right {
+  opacity: 0;
+  transform: translateX(48px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.scroll-hidden-right.scroll-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Stagger delays for child items */
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+.stagger-5 { transition-delay: 0.5s; }
+.stagger-6 { transition-delay: 0.6s; }
+.stagger-7 { transition-delay: 0.7s; }
+.stagger-8 { transition-delay: 0.8s; }
