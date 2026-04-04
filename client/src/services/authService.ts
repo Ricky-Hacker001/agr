@@ -70,3 +70,14 @@ export const logoutAdmin = () => {
   sessionStorage.removeItem('adminToken');
   sessionStorage.removeItem('adminSession');
 };
+// ── Initialize Auth ──────────────────
+
+export const initAuth = () => {
+  const parentSession = sessionStorage.getItem('parentSession');
+  const adminSession = sessionStorage.getItem('adminSession');
+
+  return {
+    parent: parentSession ? JSON.parse(parentSession) : null,
+    admin: adminSession ? JSON.parse(adminSession) : null,
+  };
+};

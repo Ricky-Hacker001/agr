@@ -5,6 +5,10 @@
     "tailwindcss": "^4.2.1"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.4.1",
     "vite": "^7.3.1"
   }
 }
