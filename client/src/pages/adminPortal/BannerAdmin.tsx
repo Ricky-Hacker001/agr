@@ -29,6 +29,18 @@ const BannerAdmin = () => {
     setBanner((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Converts the image to a Base64 string so it can be previewed immediately
+        handleChange('imageUrl', reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSave = () => {
     localStorage.setItem('arg_popup_banner', JSON.stringify(banner));
     setSaved(true);
@@ -79,20 +91,35 @@ const BannerAdmin = () => {
           <div className="px-8 py-6 space-y-6">
 
             {/* Image URL */}
+            {/* Image URL & Upload */}
             <div>
               <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                Banner Image URL <span className="text-red-400">*</span>
+                Banner Image <span className="text-red-400">*</span>
               </label>
-              <input
-                type="text"
-                value={banner.imageUrl}
-                onChange={(e) => handleChange('imageUrl', e.target.value)}
-                placeholder="https://example.com/banner.jpg"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-slate-50"
-              />
-              <p className="text-xs text-slate-400 mt-1.5">
-                Paste a direct image URL or use a local path (e.g. <code className="bg-slate-200 px-1 py-0.5 rounded">/assets/images/Banners/Banner.jpeg</code>)
-              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                {/* Upload Button */}
+                <label className="cursor-pointer flex items-center justify-center bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-3 rounded-xl text-sm font-bold border border-blue-200 transition whitespace-nowrap">
+                  <span>📁 Upload File</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+                
+                <div className="hidden sm:flex items-center text-xs text-slate-400 font-bold uppercase">OR</div>
+                
+                {/* URL Input */}
+                <input
+                  type="text"
+                  value={banner.imageUrl}
+                  onChange={(e) => handleChange('imageUrl', e.target.value)}
+                  placeholder="Paste direct image URL"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-slate-50"
+                />
+              </div>
             </div>
 
             {/* Link URL */}
