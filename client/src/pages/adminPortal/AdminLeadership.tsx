@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+
+import ImageUploader from '../../components/ImageUploader'; // Added our Lego block
+import { useState, useEffect } from 'react';
 import { type Leader } from '../../data/adminStore';
 import {
   fetchLeaders,
@@ -28,7 +30,6 @@ const AdminLeadership = () => {
   const [editing, setEditing] = useState<Omit<Leader, 'id'> & { id?: string }>(emptyForm());
   const [isEditMode, setIsEditMode] = useState(false);
   const [toast, setToast] = useState('');
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const notify = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
 
@@ -42,13 +43,7 @@ const AdminLeadership = () => {
   const openNew = () => { setEditing(emptyForm()); setIsEditMode(false); setShowForm(true); };
   const openEdit = (l: Leader) => { setEditing({ ...l }); setIsEditMode(true); setShowForm(true); };
 
-  const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setEditing(p => ({ ...p, photo: reader.result as string }));
-    reader.readAsDataURL(file);
-  };
+  
 
   const save = async () => {
     if (!editing.name.trim() || !editing.quote.trim()) return;
@@ -151,13 +146,17 @@ const AdminLeadership = () => {
                   <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center border border-blue-200 shrink-0">
                     {editing.photo ? <img src={editing.photo} alt="preview" className="w-full h-full object-cover" /> : <span className="text-3xl">👤</span>}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <button type="button" onClick={() => fileRef.current?.click()} className="px-4 py-2 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors">📷 Upload Photo</button>
+                  
+                  <div className="flex flex-col gap-2 w-full sm:w-auto shrink-0">
+                    <ImageUploader 
+                      onUploadSuccess={(url: string) => setEditing(p => ({ ...p, photo: url }))} 
+                    />
                     {editing.photo && (
-                      <button type="button" onClick={() => setEditing(p => ({ ...p, photo: null }))} className="px-4 py-2 bg-red-50 text-red-500 text-xs font-bold rounded-lg border border-red-200 hover:bg-red-100">Remove</button>
+                      <button type="button" onClick={() => setEditing(p => ({ ...p, photo: null }))} className="px-4 py-2 bg-red-50 text-red-500 text-xs font-bold rounded-lg border border-red-200 hover:bg-red-100 transition-colors">
+                        🗑️ Remove Photo
+                      </button>
                     )}
                   </div>
-                  <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
                 </div>
               </div>
 

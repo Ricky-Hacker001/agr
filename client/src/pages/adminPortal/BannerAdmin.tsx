@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ImageUploader from '../../components/ImageUploader';
 
 interface BannerData {
   enabled: boolean;
@@ -27,18 +28,6 @@ const BannerAdmin = () => {
   const handleChange = (field: keyof BannerData, value: string | boolean) => {
     setSaved(false);
     setBanner((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Converts the image to a Base64 string so it can be previewed immediately
-        handleChange('imageUrl', reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleSave = () => {
@@ -99,15 +88,9 @@ const BannerAdmin = () => {
               
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* Upload Button */}
-                <label className="cursor-pointer flex items-center justify-center bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-3 rounded-xl text-sm font-bold border border-blue-200 transition whitespace-nowrap">
-                  <span>📁 Upload File</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleImageUpload}
-                  />
-                </label>
+                <ImageUploader 
+                  onUploadSuccess={(url) => handleChange('imageUrl', url)} 
+                />
                 
                 <div className="hidden sm:flex items-center text-xs text-slate-400 font-bold uppercase">OR</div>
                 

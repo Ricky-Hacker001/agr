@@ -1,3 +1,4 @@
+import ImageUploader from '../../components/ImageUploader'; // Added this line
 import { useState, useRef, useEffect } from 'react';
 import { type GalleryImage } from '../../data/adminStore';
 import {
@@ -19,7 +20,6 @@ const AdminGallery = () => {
   const [editing, setEditing] = useState<Partial<GalleryImage>>(emptyForm());
   const [isEditMode, setIsEditMode] = useState(false);
   const [toast, setToast] = useState('');
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const notify = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
   const openNew = () => { setEditing(emptyForm()); setIsEditMode(false); setShowForm(true); };
@@ -32,13 +32,6 @@ const AdminGallery = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setEditing(p => ({ ...p, url: ev.target?.result as string }));
-    reader.readAsDataURL(file);
-  };
 
   const save = async () => {
     if (!editing.title || !editing.url) return;
@@ -107,14 +100,25 @@ const AdminGallery = () => {
                   <input type="date" value={editing.uploadedAt ?? ''} onChange={e => setEditing(p => ({ ...p, uploadedAt: e.target.value }))} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" />
                 </div>
               </div>
+              
+              {/* NEW CLOUDINARY UPLOADER */}
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Upload Local Image</label>
-                <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
-                <button onClick={() => fileRef.current?.click()} className="w-full border-2 border-dashed border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-400 hover:border-blue-400 hover:text-blue-600 transition-colors text-center">📁 Click to select image…</button>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Or Paste Image URL *</label>
-                <input type="url" value={editing.url?.startsWith('data:') ? '' : (editing.url ?? '')} onChange={e => setEditing(p => ({ ...p, url: e.target.value }))} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="https://example.com/image.jpg" />
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Gallery Image *</label>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="shrink-0 w-full sm:w-auto">
+                    <ImageUploader 
+                      onUploadSuccess={(url: string) => setEditing(p => ({ ...p, url }))} 
+                    />
+                  </div>
+                  <div className="hidden sm:flex items-center text-xs text-gray-400 font-bold uppercase">OR</div>
+                  <input 
+                    type="url" 
+                    value={editing.url ?? ''} 
+                    onChange={e => setEditing(p => ({ ...p, url: e.target.value }))} 
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none" 
+                    placeholder="Paste Cloudinary/Image URL" 
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Event Details PDF URL (Optional)</label>
