@@ -10,6 +10,7 @@ import leadershipRoutes   from './src/routes/leadershipRoutes.js';
 import feeRoutes          from './src/routes/feeRoutes.js';
 import marksRoutes        from './src/routes/marksRoutes.js';
 import announcementRoutes from './src/routes/announcementRoutes.js';
+import uploadRoutes       from './src/routes/uploadRoutes.js';
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/api/leadership',    leadershipRoutes);
 app.use('/api/fees',          feeRoutes);
 app.use('/api/marks',         marksRoutes);
 app.use('/api/announcements', announcementRoutes);
+app.use('/api/upload',        uploadRoutes);
 
 // ── 404 handler ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {
